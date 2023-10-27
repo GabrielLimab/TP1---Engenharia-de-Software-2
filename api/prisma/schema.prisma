@@ -1,0 +1,48 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator erd {
+  provider = "prisma-erd-generator"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String    @id @default(uuid())
+  name        String
+  email       String    @unique
+  username    String    @unique
+  password    String
+  followed_by User[]    @relation("UserFollows")
+  following   User[]    @relation("UserFollows")
+  picture     Picture[]
+  liked       Picture[] @relation("UserLikes")
+  created_at  DateTime  @default(now())
+
+  @@map("users")
+}
+
+model Picture {
+  id          String   @id @default(uuid())
+  user_id     String
+  user        User     @relation(fields: [user_id], references: [id])
+  likes       User[]   @relation("UserLikes")
+  tags        Tag[]    @relation("PictureTags")
+  profile_picture Boolean  @default(false)
+  picture_url String
+  created_at  DateTime @default(now())
+
+  @@map("pictures")
+}
+
+model Tag {
+  id       String    @id @default(uuid())
+  name     String    @unique
+  pictures Picture[] @relation("PictureTags")
+
+  @@map("tags")
+}
