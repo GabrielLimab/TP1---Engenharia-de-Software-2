@@ -1,0 +1,39 @@
+.form-wrapper{
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+  align-items: center;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  padding: 2em 0;
+}
+
+.form-wrapper h1{
+  margin-bottom: 0.5em;
+}
+
+.form-wrapper h2{
+  margin-bottom: 1em;
+}
+
+
+.form-wrapper h4{
+  margin: 0.5em;
+}
+
+.form-button{
+  margin: 1em 0 0.5em 0;
+}
+
+.form-wrapper a{
+  color: #000000;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.form-wrapper a:hover{
+  transition: 0.1s;
+  color: #97a0a8;
+}
