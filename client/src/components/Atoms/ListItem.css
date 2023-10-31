@@ -1,0 +1,32 @@
+.list-item {
+  color: #000000;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  width: 80%;
+  height: 50px;
+  border-radius: 4em;
+  margin: 0.75em 0 0.75em 0;
+}
+
+.list-icon {
+  margin: 0 1em 0 1em;
+  width: 2em;
+}
+
+.list-text {
+  margin: 0;
+  font-size: 1.2em;
+  font-weight: 500;
+}
+
+.list-item:hover {
+  background: #a393933a;
+  color: #000000;
+  transition: 0.2s;
+}
+
+.list-item:hover .list-icon {
+  transition: 0.2s;
+  transform: scale(1.1);
+}

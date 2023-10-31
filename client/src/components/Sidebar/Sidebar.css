@@ -1,0 +1,29 @@
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 20%;
+  height: 100%;
+  background: #fff;
+  border-right: 1px solid #e6e1e1;
+  z-index: 1;
+}
+
+.sidebar h1 a {
+  color: #000000;
+  text-decoration: none;
+  font-weight: 500;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar h1 a:hover {
+  color: #000000a9;
+  transition: 0.2s;
+}
+
+.sidebar-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
