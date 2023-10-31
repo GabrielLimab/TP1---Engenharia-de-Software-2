@@ -1,0 +1,105 @@
+.modal-closed {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #ffffff;
+  border: 1px solid #8f8686;
+  border-radius: 1%;
+  height: 50%;
+  width: 35%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: 0.1s;
+  z-index: -1;
+}
+
+.modal-open {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #ffffff;
+  border: 1px solid #8f8686;
+  border-radius: 1%;
+  height: 50%;
+  width: 35%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  z-index: 2000;
+}
+
+.modal-body {
+  width: 100%;
+  height: 100%;
+} 
+.modal-header {
+  display: flex;
+  justify-content: center;
+  height: 20%;
+}
+
+.modal-header h4 {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.modal-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80%;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  height: 100%;
+  width: 100%;
+}
+
+.modal-close-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 1.5rem;
+  cursor: pointer;
+  color: #8f8686;
+}
+
+.modal-close-icon:hover {
+  transition: 0.2s;
+  color: #000000;
+}
+
+.error-message-explore {
+  position: absolute;
+  height: 100px;
+  width: 100%;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.error-message-create {
+  position: absolute;
+  height: 65px;
+  width: 100%;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.error-message-filter {
+  position: absolute;
+  height: 65px;
+  width: 100%;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+}
