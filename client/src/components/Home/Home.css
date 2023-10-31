@@ -1,0 +1,26 @@
+.home {
+  height: 100vh;
+  width: 100vw;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.home-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 80%;
+  height: 100%;
+  z-index: 1;
+}
+
+.home-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 80%;
+}
