@@ -1,0 +1,132 @@
+.post {
+  margin-bottom: 20px;
+  padding: 1em;
+  border: 1px solid #e6e1e1;
+  border-radius: 1%;
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 10%;
+}
+
+.post-header-left {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: 12%;
+
+}
+
+.post-header-left a {
+  height: 40px;
+  color: #000000;
+  text-decoration: none;
+}
+
+.post-header-left a:hover {
+  color: #000000a9;
+  transition: 0.2s;
+}
+
+.post-header-left img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin: 0 1em 0 0;
+  padding: 0;
+}
+
+.post-photo {
+  width: 400px;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 1%;
+}
+
+.post-image-container {
+  position: relative;
+}
+
+.post-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.post-overlay-heart {
+  animation: overlay 1s ease-in;
+  opacity: 0;
+  transform: scale(0);
+}
+
+@keyframes overlay {
+  0% { opacity:0; transform:scale(0); }
+  18% { opacity:.9; transform:scale(1.2); }
+  30% { transform:scale(.95); }
+  45%,
+  80% { opacity:.9; transform:scale(1); }
+}
+
+.post-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 10%;
+}
+
+.post-footer-left {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 25%;
+}
+
+.post-heart-icon {
+  animation: like 0.3s linear;
+}
+
+@keyframes like {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.post-heart-icon:hover {
+  cursor: pointer;
+  color: #000000a9;
+  transition: 0.2s;
+}
+
+.post-footer-icon:hover {
+  cursor: pointer;
+  color: #000000a9;
+  transition: 0.2s;
+}
+
+.post-footer-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 20%;
+}
+
+.post-footer-right p {
+  margin: 0 0.5em 0 0.5em;
+}
