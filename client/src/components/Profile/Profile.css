@@ -1,0 +1,88 @@
+.profile-page {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100vw;
+  height: 100vh;
+  overflow-x: hidden;
+}
+
+.profile-content {
+  display: flex;
+  justify-content: center;
+  width: 80%;
+  height: 95%;
+}
+
+.profile {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: white;
+}
+
+.profile-header {
+  width: 80%;
+  display: flex;
+  justify-content: flex-start;
+  height: 20%;
+  margin: 2em 0 2em 0;
+}
+
+.profile-avatar {
+  width: 125px;
+  height: 125px;
+  border-radius: 50%;
+}
+
+.profile-avatar:hover {
+  opacity: 0.9;
+  cursor: pointer;
+  transition: 0.2s;
+
+}
+
+.profile-header-info {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.profile-names {
+  width: 80%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.profile-numbers {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.profile-names h3 {
+  margin: 0;
+}
+
+.profile-follow-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: translateY(-5%);
+}
+
+.profile-numbers h4 {
+  margin: 0;
+}
+
+.profile-posts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  justify-items: center;
+  align-items: center;
+}
