@@ -6,65 +6,41 @@ import { Tag } from "@prisma/client";
 
 class TagServiceClass {
     async addToPicture(userId: string, pictureId: string, tag: Tag) {
-        try {
-            const picture = await prisma.picture.findUnique({
+        const picture = await prisma.picture.findUnique({
+            where: {
+                id: pictureId
+            },
+        });
+        if (picture) {
+            if (picture.user_id !== userId) {
+                throw new PermissionError("You are not allowed to add tags to this picture");
+            }
+            
+            const tagExists = await prisma.tag.findFirst({
                 where: {
-                    id: pictureId
+                    name: tag.name,
                 },
             });
-            if (picture) {
-                if (picture.user_id !== userId) {
-                    throw new PermissionError("You are not allowed to add tags to this picture");
-                }
-                
-                const tagExists = await prisma.tag.findFirst({
+            if (tagExists) {
+                const pictureHasTag = await prisma.picture.findFirst({
                     where: {
-                        name: tag.name,
-                    },
-                });
-                if (tagExists) {
-                    const pictureHasTag = await prisma.picture.findFirst({
-                        where: {
-                            id: pictureId,
-                            tags: {
-                                some: {
-                                    id: tagExists.id,
-                                },
-                            },
-                        },
-                    })
-                    if (pictureHasTag) {
-                        throw new QueryError("Tag already exists on this picture");
-                    }
-                    else{
-                        const newTag = await prisma.tag.update({
-                            where: {
+                        id: pictureId,
+                        tags: {
+                            some: {
                                 id: tagExists.id,
                             },
-                            data: {
-                                pictures: {
-                                    connect: {
-                                        id: pictureId,
-                                    },
-                                },
-                            },
-                            select: {
-                                id: true,
-                                name: true,
-                                pictures: {
-                                    select: {
-                                        id: true,
-                                    },
-                                },
-                            },
-                        });
-                        return newTag;
-                    }
+                        },
+                    },
+                })
+                if (pictureHasTag) {
+                    throw new QueryError("Tag already exists on this picture");
                 }
                 else{
-                    const newTag = await prisma.tag.create({
+                    const newTag = await prisma.tag.update({
+                        where: {
+                            id: tagExists.id,
+                        },
                         data: {
-                            name: tag.name,
                             pictures: {
                                 connect: {
                                     id: pictureId,
@@ -84,34 +60,51 @@ class TagServiceClass {
                     return newTag;
                 }
             }
-            throw new QueryError("Picture not found");
-        } catch (error) {
-            throw error;
+            else{
+                const newTag = await prisma.tag.create({
+                    data: {
+                        name: tag.name,
+                        pictures: {
+                            connect: {
+                                id: pictureId,
+                            },
+                        },
+                    },
+                    select: {
+                        id: true,
+                        name: true,
+                        pictures: {
+                            select: {
+                                id: true,
+                            },
+                        },
+                    },
+                });
+                return newTag;
+            }
         }
+        throw new QueryError("Picture not found");
     }
 
     async getAll() {
-        try {
-            const tags = await prisma.tag.findMany({
-                orderBy: {
-                    pictures: {
-                        _count: "desc",
+        const tags = await prisma.tag.findMany({
+            orderBy: {
+                pictures: {
+                    _count: "desc",
+                },
+            },
+            select: {
+                id: true,
+                name: true,
+                pictures: {
+                    select: {
+                        id: true,
                     },
                 },
-                select: {
-                    id: true,
-                    name: true,
-                    pictures: {
-                        select: {
-                            id: true,
-                        },
-                    },
-                },
-            });
-            return tags;
-        } catch (error) {
-            throw error;
-        }
+            },
+        });
+        
+        return tags;
     }
 
     async getByTagname(tag: string) {
