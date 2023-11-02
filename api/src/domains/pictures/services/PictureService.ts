@@ -104,10 +104,12 @@ class PictureServiceClass {
     }
 
     async getTopPictures() {
+        const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+        
         const pictures = await prisma.picture.findMany({
             where: {
                 created_at: {
-                    gte: new Date(Date.now() - 24 * 60 * 60 * 1000),
+                    gte: oneDayAgo,
                 },
                 profile_picture: false,
             },
@@ -140,72 +142,38 @@ class PictureServiceClass {
 
     async getPicturesByTag(tag: string) {
         let pictures;
-
-        if (tag === '') {
-            pictures = await prisma.picture.findMany({
-                where: {
-                    profile_picture: false,
-                    tags: {
-                        none: {},
+        
+        pictures = await prisma.picture.findMany({
+            where: {
+                profile_picture: false,
+                tags: {
+                    some: {
+                        name: tag,
                     },
                 },
-
-                select: {
-                    id: true,
-                    user: {
-                        select: {
-                            id: true,
-                            username: true,
-                            picture: {
-                                where: {
-                                    profile_picture: true,
-                                },
-                            }
-                        },
-                    },
-                    likes: {
-                        select: {
-                            id: true,
+            },
+            select: {
+                id: true,
+                user: {
+                    select: {
+                        id: true,
+                        username: true,
+                        picture: {
+                            where: {
+                                profile_picture: true,
+                            },
                         }
                     },
-                    tags: true,
-                    picture_url: true,
                 },
-            });
-
-        } else {
-            pictures = await prisma.picture.findMany({
-                where: {
-                    profile_picture: false,
-                    tags: {
-                        some: {
-                            name: tag,
-                        },
-                    },
+                likes: {
+                    select: {
+                        id: true,
+                    }
                 },
-                select: {
-                    id: true,
-                    user: {
-                        select: {
-                            id: true,
-                            username: true,
-                            picture: {
-                                where: {
-                                    profile_picture: true,
-                                },
-                            }
-                        },
-                    },
-                    likes: {
-                        select: {
-                            id: true,
-                        }
-                    },
-                    tags: true,
-                    picture_url: true,
-                },
-            });
-        }   
+                tags: true,
+                picture_url: true,
+            },
+        });
 
         return pictures;
     }
