@@ -2,7 +2,7 @@ import { prisma } from "../../../lib/prisma"
 import { QueryError } from '../../../../errors/QueryError';
 
 class PictureServiceClass {
-    async uploadPicture(userId:string, file: any, tag: string) {
+    async create(userId:string, file: any, tag: string) {
         const pictureTag = await prisma.tag.findUnique({
             where: {
                 name: tag,
@@ -34,7 +34,7 @@ class PictureServiceClass {
         });
     }
 
-    async getPicture(id: string) {
+    async getById(id: string) {
         const picture = await prisma.picture.findUnique({
             where: {
                 id: id,
@@ -68,7 +68,7 @@ class PictureServiceClass {
     }
 
     async toggleLike(userId: string, id: string) {
-        const picture = await this.getPicture(id);
+        const picture = await this.getById(id);
 
         if (!picture) {
             throw new QueryError('Picture not found');
@@ -103,9 +103,9 @@ class PictureServiceClass {
         }
     }
 
-    async getTopPictures() {
+    async getTop() {
         const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
-        
+
         const pictures = await prisma.picture.findMany({
             where: {
                 created_at: {
@@ -140,7 +140,7 @@ class PictureServiceClass {
         return pictures;
     }
 
-    async getPicturesByTag(tag: string) {
+    async getByTagname(tagname: string) {
         let pictures;
         
         pictures = await prisma.picture.findMany({
@@ -148,7 +148,7 @@ class PictureServiceClass {
                 profile_picture: false,
                 tags: {
                     some: {
-                        name: tag,
+                        name: tagname,
                     },
                 },
             },
@@ -178,7 +178,7 @@ class PictureServiceClass {
         return pictures;
     }
 
-    async getPicturesByUserID(userId: string) {
+    async getByUserId(userId: string) {
         const pictures = await prisma.picture.findMany({
             where: {
                 user_id: userId,
@@ -201,7 +201,7 @@ class PictureServiceClass {
         return pictures;
     }
 
-    async getAllPictures() {
+    async getAll() {
         const pictures = await prisma.picture.findMany({
             where: {
                 profile_picture: false,
@@ -233,7 +233,7 @@ class PictureServiceClass {
         return pictures;
     }
 
-    async getFollowingPictures(userId: string) {
+    async getFollowing(userId: string) {
         const pictures = await prisma.picture.findMany({
             where: {
                 user: {

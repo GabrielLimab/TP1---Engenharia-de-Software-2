@@ -4,13 +4,13 @@ import { hash } from 'bcrypt';
 import { QueryError } from '../../../../errors/QueryError';
 
 class UserServiceClass {
-  async encryptPassword(password: string) {
+  private async encryptPassword(password: string) {
     const saltRounds = 10;
     const encryptedPassword = await hash(password, saltRounds);
     return encryptedPassword;
   }
 
-  async createUser(body: User, file: any) {
+  async create(body: User, file: any) {
     const userEmail = await prisma.user.findFirst({
       where: {
         email: body.email,
@@ -51,7 +51,7 @@ class UserServiceClass {
     return newUser;
   }
 
-  async getAllUsers() {
+  async getAll() {
     const users = await prisma.user.findMany({
       select: {
         id: true,
@@ -77,7 +77,7 @@ class UserServiceClass {
     return users;
   }
 
-  async getUserById(id: string) {
+  async getById(id: string) {
     const user = await prisma.user.findFirst({
       where: {
         id,
@@ -114,7 +114,7 @@ class UserServiceClass {
     return user;
   }
 
-  async getUserByUsername(username: string) {
+  async getByUsername(username: string) {
     const user = await prisma.user.findFirst({
       where: {
         username,
@@ -152,7 +152,7 @@ class UserServiceClass {
     return user;
   }
 
-  async editUser(id: string, body: Partial<Omit<User, 'id'>>, file: any){
+  async edit(id: string, body: Partial<Omit<User, 'id'>>, file: any){
     const userData = body;
 
     if (body.username) {

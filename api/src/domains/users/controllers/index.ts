@@ -21,13 +21,12 @@ router.post('/logout',
     }
   },
 );
-    
 
 router.post('/',
   upload,
   async (req: Request, res: Response, next: NextFunction) => {
     try {     
-      await UserService.createUser(req.body, req.file);
+      await UserService.create(req.body, req.file);
       res.status(statusCodes.CREATED).end();
     } catch (error) {
       next(error);
@@ -39,7 +38,7 @@ router.get('/me',
   verifyJWT, 
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const user = await UserService.getUserById(req.userId!);
+      const user = await UserService.getById(req.userId!);
       res.status(statusCodes.SUCCESS).json(user);
     } catch (error) { 
       next(error);
@@ -51,7 +50,7 @@ router.get('/',
 verifyJWT,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const user = await UserService.getAllUsers();
+      const user = await UserService.getAll();
       res.status(statusCodes.SUCCESS).json(user);
     } catch (error) {
       next(error)
@@ -63,7 +62,7 @@ router.get('/:id',
 verifyJWT,
   async (req: Request, res: Response, next: NextFunction) => {
     try{
-      const user = await UserService.getUserById(req.params.id);
+      const user = await UserService.getById(req.params.id);
       res.status(statusCodes.SUCCESS).json(user);
     } catch (error) {
       next(error)
@@ -75,7 +74,7 @@ router.get('/username/:username',
 verifyJWT,
   async (req: Request, res: Response, next: NextFunction) => {
     try{
-      const user = await UserService.getUserByUsername(req.params.username);
+      const user = await UserService.getByUsername(req.params.username);
       res.status(statusCodes.SUCCESS).json(user);
     } catch (error) {
       next(error)
@@ -83,13 +82,12 @@ verifyJWT,
   },
 );
 
-
 router.put('/:id',
 upload,
 verifyJWT,
   async (req: Request, res:Response, next: NextFunction) => {
     try{
-      await UserService.editUser(req.params.id, req.body, req.file);
+      await UserService.edit(req.params.id, req.body, req.file);
       res.status(statusCodes.SUCCESS).end();
     } catch (error) {
       next(error)

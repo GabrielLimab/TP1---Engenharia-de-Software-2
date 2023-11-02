@@ -5,7 +5,7 @@ import { Tag } from "@prisma/client";
 
 
 class TagServiceClass {
-    async addTagToPicture(userId: string, pictureId: string, tag: Tag) {
+    async addToPicture(userId: string, pictureId: string, tag: Tag) {
         try {
             const picture = await prisma.picture.findUnique({
                 where: {
@@ -90,7 +90,7 @@ class TagServiceClass {
         }
     }
 
-    async getTags() {
+    async getAll() {
         try {
             const tags = await prisma.tag.findMany({
                 orderBy: {
@@ -114,7 +114,7 @@ class TagServiceClass {
         }
     }
 
-    async getTag(tag: string) {
+    async getByTagname(tag: string) {
         const existingTag = await prisma.tag.findUnique({
             where: {
                 name: tag,

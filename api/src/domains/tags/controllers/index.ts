@@ -1,19 +1,14 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { TagService } from '../services/TagsService';
 import { statusCodes } from '../../../../utils/constants/status-codes';
-import { loginMiddleware,
-    verifyJWT,
-    notLoggedIn } from '../../../middlewares/auth';
-import { upload } from '../../../middlewares/multer';
-  
+import { verifyJWT } from '../../../middlewares/auth';
 export const router = Router();
 
-
-router.put('/add/:id',
+router.post('/:pictureId',
     verifyJWT,
     async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const tag = await TagService.addTagToPicture(req.userId!,req.params.id,req.body);
+            const tag = await TagService.addToPicture(req.userId!, req.params.pictureId, req.body);
             res.status(statusCodes.CREATED).json(tag);
         } catch (error) {
             next(error);
@@ -25,7 +20,7 @@ router.get('/',
     verifyJWT,
     async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const tags = await TagService.getTags();
+            const tags = await TagService.getAll();
             res.status(statusCodes.SUCCESS).json(tags);
         } catch (error) {
             next(error);
@@ -37,7 +32,7 @@ router.get('/:tag',
     verifyJWT,
     async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const tags = await TagService.getTag(req.params.tag);
+            const tags = await TagService.getByTagname(req.params.tag);
             res.status(statusCodes.SUCCESS).json(tags);
         } catch (error) {
             next(error);
