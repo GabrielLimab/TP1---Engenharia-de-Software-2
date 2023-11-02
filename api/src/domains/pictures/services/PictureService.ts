@@ -10,14 +10,12 @@ class PictureServiceClass {
         });
 
         if (!pictureTag) {
-            console.log('Created');
             await prisma.tag.create({
                 data: {
                     name: tag,
                 },
             });
         }
-
 
         await prisma.picture.create({
             data: {
@@ -142,6 +140,7 @@ class PictureServiceClass {
 
     async getPicturesByTag(tag: string) {
         let pictures;
+
         if (tag === '') {
             pictures = await prisma.picture.findMany({
                 where: {
