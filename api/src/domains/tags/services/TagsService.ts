@@ -5,7 +5,7 @@ import { Tag } from "@prisma/client";
 
 
 class TagServiceClass {
-    async addToPicture(userId: string, pictureId: string, tag: Tag) {
+    async addToPicture(userId: string, pictureId: string, tagname: string) {
         const picture = await prisma.picture.findUnique({
             where: {
                 id: pictureId
@@ -18,7 +18,7 @@ class TagServiceClass {
             
             const tagExists = await prisma.tag.findFirst({
                 where: {
-                    name: tag.name,
+                    name: tagname,
                 },
             });
             if (tagExists) {
@@ -36,7 +36,7 @@ class TagServiceClass {
                     throw new QueryError("Tag already exists on this picture");
                 }
                 else{
-                    const newTag = await prisma.tag.update({
+                    await prisma.tag.update({
                         where: {
                             id: tagExists.id,
                         },
@@ -57,13 +57,13 @@ class TagServiceClass {
                             },
                         },
                     });
-                    return newTag;
+                    return;
                 }
             }
             else{
-                const newTag = await prisma.tag.create({
+                await prisma.tag.create({
                     data: {
-                        name: tag.name,
+                        name: tagname,
                         pictures: {
                             connect: {
                                 id: pictureId,
@@ -80,7 +80,7 @@ class TagServiceClass {
                         },
                     },
                 });
-                return newTag;
+                return;
             }
         }
         throw new QueryError("Picture not found");

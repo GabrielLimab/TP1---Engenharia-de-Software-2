@@ -8,8 +8,8 @@ router.post('/:pictureId',
     verifyJWT,
     async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const tag = await TagService.addToPicture(req.userId!, req.params.pictureId, req.body);
-            res.status(statusCodes.CREATED).json(tag);
+            await TagService.addToPicture(req.userId!, req.params.pictureId, req.body.tagname);
+            res.status(statusCodes.CREATED).end();
         } catch (error) {
             next(error);
         }
