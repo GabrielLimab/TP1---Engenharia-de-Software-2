@@ -36,7 +36,6 @@ model Picture {
   picture_url String
   created_at  DateTime @default(now())
 
-  @@unique([user_id, profile_picture]) 
   @@map("pictures")
 }
 
