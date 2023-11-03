@@ -67,42 +67,6 @@ class PictureServiceClass {
         return picture;
     }
 
-    async toggleLike(userId: string, id: string) {
-        const picture = await this.getById(id);
-
-        if (!picture) {
-            throw new QueryError('Picture not found');
-        }
-
-        if (picture.likes.some((like) => like.id === userId)) {
-            await prisma.picture.update({
-                where: {
-                    id: id,
-                },
-                data: {
-                    likes: {
-                        disconnect: {
-                            id: userId,
-                        },
-                    },
-                },
-            });
-        } else {
-            await prisma.picture.update({
-                where: {
-                    id: id,
-                },
-                data: {
-                    likes: {
-                        connect: {
-                            id: userId,
-                        },
-                    },
-                },
-            });
-        }
-    }
-
     async getTop() {
         const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
 
@@ -131,7 +95,11 @@ class PictureServiceClass {
                         }
                     },
                 },
-                likes: true,
+                likes: {
+                    select: {
+                        id: true,
+                    }
+                },
                 tags: true,
                 picture_url: true,
             }
@@ -189,7 +157,11 @@ class PictureServiceClass {
                 user_id: true,
                 picture_url: true,
                 profile_picture: true,
-                likes: true,
+                likes: {
+                    select: {
+                        id: true,
+                    }
+                },
                 tags: true, 
                 created_at: true,
             }
@@ -261,7 +233,11 @@ class PictureServiceClass {
                         }
                     },
                 },
-                likes: true,
+                likes: {
+                    select: {
+                        id: true,
+                    }
+                },
                 tags: true,
                 picture_url: true,
             }
@@ -272,6 +248,42 @@ class PictureServiceClass {
         }
         
         return pictures;
+    }
+
+    async toggleLike(userId: string, id: string) {
+        const picture = await this.getById(id);
+
+        if (!picture) {
+            throw new QueryError('Picture not found');
+        }
+
+        if (picture.likes.some((like) => like.id === userId)) {
+            await prisma.picture.update({
+                where: {
+                    id: id,
+                },
+                data: {
+                    likes: {
+                        disconnect: {
+                            id: userId,
+                        },
+                    },
+                },
+            });
+        } else {
+            await prisma.picture.update({
+                where: {
+                    id: id,
+                },
+                data: {
+                    likes: {
+                        connect: {
+                            id: userId,
+                        },
+                    },
+                },
+            });
+        }
     }
 }
 
