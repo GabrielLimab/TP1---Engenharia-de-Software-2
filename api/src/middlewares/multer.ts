@@ -1,7 +1,7 @@
 import multer from 'multer';
 import { FileFilterCallback } from 'multer';
 import path from 'path';
-import { Express, Request } from 'express';
+import { Request } from 'express';
 import { MediaTypeError } from '../../errors/MediaTypeError';
 
 const storage = multer.diskStorage({

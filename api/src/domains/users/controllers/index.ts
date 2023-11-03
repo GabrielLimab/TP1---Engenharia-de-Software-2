@@ -1,8 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { UserService } from '../services/UserService';
-import { loginMiddleware,
-  verifyJWT,
-  notLoggedIn } from '../../../middlewares/auth';
+import { loginMiddleware, verifyJWT, notLoggedIn } from '../../../middlewares/auth';
 import { statusCodes } from '../../../../utils/constants/status-codes';
 import { upload } from '../../../middlewares/multer';
   
