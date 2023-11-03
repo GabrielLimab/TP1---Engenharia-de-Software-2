@@ -36,9 +36,6 @@ export const upload = multer({
     }
 }).single('picture');
 
-
-
-
 export default multer({ storage });
 
 
