@@ -4,6 +4,31 @@ import { hash } from 'bcrypt';
 import { QueryError } from '../../../../errors/QueryError';
 
 class UserServiceClass {
+  selectOptions = {
+    id: true,
+    name: true,
+    email: true,
+    username: true,
+    followed_by: {select:{
+      id: true,
+      },
+    },
+    following: {select:{
+      id: true,
+      },
+    },
+    picture: {
+      where: {
+        profile_picture: true,
+      },
+      select: {
+        id: true,
+        picture_url: true,
+      },
+    },
+    created_at: true,
+  };
+
   private async encryptPassword(password: string) {
     const saltRounds = 10;
     const encryptedPassword = await hash(password, saltRounds);
@@ -53,21 +78,7 @@ class UserServiceClass {
 
   async getAll() {
     const users = await prisma.user.findMany({
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        username: true,
-        followed_by: {select:{
-          id: true,
-          },
-        },
-        following: {select:{
-          id: true,
-          },
-        },
-        created_at: true,
-      },
+      select: this.selectOptions,
     });
 
     if (!users) {
@@ -82,29 +93,7 @@ class UserServiceClass {
       where: {
         id,
       },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        username: true,
-        followed_by: {select:{
-          id: true,
-          },
-        },
-        following: {select:{
-          id: true,
-          },
-        },
-        picture: {
-          where: {
-            profile_picture: true,
-          },
-          select: {
-            id: true,
-          },
-        },
-        created_at: true,
-      },
+      select: this.selectOptions,
     });
 
     if (!user) {
@@ -119,30 +108,7 @@ class UserServiceClass {
       where: {
         username,
       },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        username: true,
-        followed_by: {select:{
-          id: true,
-          },
-        },
-        following: {select:{
-          id: true,
-          },
-        },
-        picture: {
-          where: {
-            profile_picture: true,
-          },
-          select: {
-            id: true,
-            picture_url: true,
-          },
-        },
-        created_at: true,
-      },
+      select: this.selectOptions,
     });
 
     if (!user) {
@@ -243,21 +209,13 @@ class UserServiceClass {
       },
     });
 
-    if (alreadyFollowing) {
-      await prisma.user.update({
-        where: {
-          id: followingId,
-        },
-        data: {
-          following: {
-            disconnect: {
-              id: followedId,
-            },
-          },
-        },
-      });
+    let key;
 
-      return;
+    if (alreadyFollowing) {
+      key = 'disconnect';
+    }
+    else {
+      key = 'connect';
     }
 
     await prisma.user.update({
@@ -266,14 +224,12 @@ class UserServiceClass {
       },
       data: {
         following: {
-          connect: {
+          [key]: {
             id: followedId,
           },
         },
       },
     });
-
-    return;
   }
 
 }

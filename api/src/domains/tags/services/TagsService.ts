@@ -1,10 +1,18 @@
 import { prisma } from "../../../lib/prisma"
 import { QueryError } from '../../../../errors/QueryError';
 import { PermissionError } from "../../../../errors/PermissionError";
-import { Tag } from "@prisma/client";
-
 
 class TagServiceClass {
+    selectOptions = {
+        id: true,
+        name: true,
+        pictures: {
+            select: {
+                id: true,
+            },
+        },
+    };
+
     async addToPicture(userId: string, pictureId: string, tagname: string) {
         const picture = await prisma.picture.findUnique({
             where: {
@@ -65,15 +73,7 @@ class TagServiceClass {
                     _count: "desc",
                 },
             },
-            select: {
-                id: true,
-                name: true,
-                pictures: {
-                    select: {
-                        id: true,
-                    },
-                },
-            },
+            select: this.selectOptions,
         });
         
         return tags;
@@ -84,15 +84,7 @@ class TagServiceClass {
             where: {
                 name: tag,
             },
-            select: {
-                id: true,
-                name: true,
-                pictures: {
-                    select: {
-                        id: true,
-                    },
-                },
-            },
+            select: this.selectOptions,
         });
         
         if (!existingTag) {

@@ -2,6 +2,28 @@ import { prisma } from "../../../lib/prisma"
 import { QueryError } from '../../../../errors/QueryError';
 
 class PictureServiceClass {
+    selectOptions = {
+        id: true,
+        user: {
+            select: {
+                id: true,
+                username: true,
+                picture: {
+                    where: {
+                        profile_picture: true,
+                    },
+                }
+            },
+        },
+        likes: {
+            select: {
+                id: true,
+            }
+        },
+        tags: true,
+        picture_url: true,
+    }
+
     async create(userId:string, file: any, tag: string) {
         const pictureTag = await prisma.tag.findUnique({
             where: {
@@ -39,25 +61,7 @@ class PictureServiceClass {
             where: {
                 id: id,
             },
-            select: {
-                id: true,
-                picture_url: true,
-                user: {
-                    select: {
-                        id: true,
-                    },
-                },
-                likes: {
-                    select: {
-                        id: true,
-                    },
-                },
-                tags: {
-                    select: {
-                        id: true,
-                    },
-                },
-            },
+            select: this.selectOptions,
         });
 
         if (!picture) {
@@ -82,27 +86,7 @@ class PictureServiceClass {
                     _count: 'desc',
                 }
             },
-            select: {
-                id: true,
-                user: {
-                    select: {
-                        id: true,
-                        username: true,
-                        picture: {
-                            where: {
-                                profile_picture: true,
-                            },
-                        }
-                    },
-                },
-                likes: {
-                    select: {
-                        id: true,
-                    }
-                },
-                tags: true,
-                picture_url: true,
-            }
+            select: this.selectOptions,
         });
 
         return pictures;
@@ -120,27 +104,7 @@ class PictureServiceClass {
                     },
                 },
             },
-            select: {
-                id: true,
-                user: {
-                    select: {
-                        id: true,
-                        username: true,
-                        picture: {
-                            where: {
-                                profile_picture: true,
-                            },
-                        }
-                    },
-                },
-                likes: {
-                    select: {
-                        id: true,
-                    }
-                },
-                tags: true,
-                picture_url: true,
-            },
+            select: this.selectOptions,
         });
 
         return pictures;
@@ -152,19 +116,7 @@ class PictureServiceClass {
                 user_id: userId,
                 profile_picture: false,
             },
-            select: {
-                id: true,
-                user_id: true,
-                picture_url: true,
-                profile_picture: true,
-                likes: {
-                    select: {
-                        id: true,
-                    }
-                },
-                tags: true, 
-                created_at: true,
-            }
+            select: this.selectOptions,
         });
         if(!pictures) {
             throw new QueryError('No pictures found');
@@ -178,28 +130,7 @@ class PictureServiceClass {
             where: {
                 profile_picture: false,
             },
-
-            select: {
-                id: true,
-                user: {
-                    select: {
-                        id: true,
-                        username: true,
-                        picture: {
-                            where: {
-                                profile_picture: true,
-                            },
-                        },
-                    },
-                },
-                likes: {
-                    select: {
-                        id: true,
-                    }
-                },
-                tags: true,
-                picture_url: true,
-            },
+            select: this.selectOptions,
         });
 
         return pictures;
@@ -220,27 +151,7 @@ class PictureServiceClass {
             orderBy: {
                 created_at: 'desc',
             },
-            select: {
-                id: true,
-                user: {
-                    select: {
-                        id: true,
-                        username: true,
-                        picture: {
-                            where: {
-                                profile_picture: true,
-                            },
-                        }
-                    },
-                },
-                likes: {
-                    select: {
-                        id: true,
-                    }
-                },
-                tags: true,
-                picture_url: true,
-            }
+            select: this.selectOptions,
         });
         
         if(!pictures) {
@@ -257,33 +168,27 @@ class PictureServiceClass {
             throw new QueryError('Picture not found');
         }
 
-        if (picture.likes.some((like) => like.id === userId)) {
-            await prisma.picture.update({
-                where: {
-                    id: id,
-                },
-                data: {
-                    likes: {
-                        disconnect: {
-                            id: userId,
-                        },
-                    },
-                },
-            });
+        let key;
+        const isLiked = picture.likes.some((like) => like.id === userId);
+
+        if (isLiked) {
+            key = 'disconnect';
         } else {
-            await prisma.picture.update({
-                where: {
-                    id: id,
-                },
-                data: {
-                    likes: {
-                        connect: {
-                            id: userId,
-                        },
+            key = 'connect';
+        }
+
+        await prisma.picture.update({
+            where: {
+                id: id,
+            },
+            data: {
+                likes: {
+                    [key]: {
+                        id: userId,
                     },
                 },
-            });
-        }
+            },
+        });
     }
 }
 
