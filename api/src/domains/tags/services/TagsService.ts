@@ -10,80 +10,52 @@ class TagServiceClass {
             where: {
                 id: pictureId
             },
-        });
-        if (picture) {
-            if (picture.user_id !== userId) {
-                throw new PermissionError("You are not allowed to add tags to this picture");
-            }
-            
-            const tagExists = await prisma.tag.findFirst({
-                where: {
-                    name: tagname,
-                },
-            });
-            if (tagExists) {
-                const pictureHasTag = await prisma.picture.findFirst({
-                    where: {
-                        id: pictureId,
-                        tags: {
-                            some: {
-                                id: tagExists.id,
-                            },
-                        },
-                    },
-                })
-                if (pictureHasTag) {
-                    throw new QueryError("Tag already exists on this picture");
-                }
-                else{
-                    await prisma.tag.update({
-                        where: {
-                            id: tagExists.id,
-                        },
-                        data: {
-                            pictures: {
-                                connect: {
-                                    id: pictureId,
-                                },
-                            },
-                        },
-                        select: {
-                            id: true,
-                            name: true,
-                            pictures: {
-                                select: {
-                                    id: true,
-                                },
-                            },
-                        },
-                    });
-                    return;
-                }
-            }
-            else{
-                await prisma.tag.create({
-                    data: {
-                        name: tagname,
-                        pictures: {
-                            connect: {
-                                id: pictureId,
-                            },
-                        },
-                    },
+            select: {
+                id: true,
+                user_id: true,
+                tags: {
                     select: {
                         id: true,
                         name: true,
-                        pictures: {
-                            select: {
-                                id: true,
-                            },
-                        },
                     },
-                });
-                return;
-            }
-        }
-        throw new QueryError("Picture not found");
+                },
+            },
+          });
+          
+          if (!picture) {   
+            throw new QueryError("Picture not found");
+          }
+          
+          if (picture.user_id !== userId) {
+            throw new PermissionError("You are not allowed to add tags to this picture");
+          }
+          
+          const tagAlreadyExistsOnPicture = picture.tags.some((pictureTag) => pictureTag.name === tagname);
+          
+          if (tagAlreadyExistsOnPicture) {
+            throw new QueryError("Tag already exists on this picture");
+          }
+          
+          await prisma.tag.upsert({
+            where: {
+                name: tagname,
+            },
+            create: {
+                name: tagname,
+                pictures: {
+                    connect: {
+                        id: pictureId,
+                    },
+                },
+            },
+            update: {
+                pictures: {
+                    connect: {
+                        id: pictureId,
+                    },
+                },
+            },
+        });
     }
 
     async getAll() {
