@@ -19,29 +19,27 @@ jobs:
           npm test
 
   e2e-tests:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        node-version: [14]
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v3
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
       with:
-        node-version: '20'
-        cache: 'npm'
-    - name: Run API in background
-        working-directory: api
-        run: |
-          npm ci
-          npm run dev
-        env:
-          PORT: 3030
-
-    - name: Run and test app
-      working-directory: client
+        node-version: ${{ matrix.node-version }}
+    - name: Install API dependencies and run API
       run: |
+        cd api
         npm ci
-        npm run dev
-
-    - name: Cypress run
-      uses: cypress-io/github-action@v6
+        npm run dev &
+    - name: Install client dependencies and run client
+      run: |
+        cd client
+        npm ci
+        npm run dev &
+    - name: Run Cypress tests
+      run: |
+        cd ..
+        npx cypress run
