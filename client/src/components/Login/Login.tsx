@@ -44,7 +44,7 @@ export default function Login() {
         <Button loading={loading} buttonText='LOGIN'/>
       </form>
       {error ? <Error error={error} /> : null}
-      <h4>DOESN'T HAVE AN ACCOUNT? <Link to='/signup'>SIGN UP</Link></h4>
+      <h4>DOESN'T HAVE AN ACCOUNT? <Link className="signup" to='/signup'>SIGN UP</Link></h4>
       <h5><Link
       to = ''>Forgot your password?</Link></h5>
     </div>

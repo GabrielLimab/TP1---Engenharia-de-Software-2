@@ -9,7 +9,7 @@ dotenv.config();
 export const app: Express = express();
 
 const options: CorsOptions = {
-  origin: getEnv('APP_URL'),
+  origin: [getEnv('APP_URL_ADDRESS'), getEnv('APP_URL_LOCALHOST')],
   credentials: true
 };
 app.use(cors(options));

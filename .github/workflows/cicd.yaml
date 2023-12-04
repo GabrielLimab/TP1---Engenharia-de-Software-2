@@ -1,7 +1,7 @@
 name: Test code
 on: [push]
 jobs:
-  Explore-GitHub-Actions:
+  unit-tests:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -17,3 +17,31 @@ jobs:
           cd api
           npm ci
           npm test
+
+  e2e-tests:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+        cache: 'npm'
+    - name: Run API in background
+        working-directory: api
+        run: |
+          npm ci
+          npm run dev
+        env:
+          PORT: 3030
+
+    - name: Run and test app
+      working-directory: client
+      run: |
+        npm ci
+        npm run dev
+
+    - name: Cypress run
+      uses: cypress-io/github-action@v6

@@ -1,10 +1,10 @@
 import { JwtPayload, sign, verify } from 'jsonwebtoken';
 import { compare } from 'bcrypt';
-import { prisma } from "../libs/prisma";
 import { PermissionError } from '../../errors/PermissionError';
 import { statusCodes } from '../../utils/constants/status-codes';
 import { Request, Response, NextFunction } from 'express';
 import { getEnv } from '../../utils/functions/get-env';
+import prisma from "../libs/prisma"
 
 function generateJWT(userId: string , res: Response) {
   const body = {
