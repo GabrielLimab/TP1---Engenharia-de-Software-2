@@ -9,6 +9,10 @@ describe('E2E tests', () => {
     cy.clearAllCookies();
   });
 
+  it('should be in login url', () => {
+    cy.url().should('eq', 'http://localhost:5173/');
+  });
+
   it('should displays input fields', () => {
     cy.get('.text-input').should('have.length', 2);
   });
