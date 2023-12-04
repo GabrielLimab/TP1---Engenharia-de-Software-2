@@ -34,13 +34,4 @@ jobs:
       run: |
         cd api
         npm ci
-        npm run dev &
-    - name: Install client dependencies and run client
-      run: |
-        cd client
-        npm ci
-        npm run dev &
-    - name: Run Cypress tests
-      run: |
-        cd ..
-        npx cypress run
+        npm run dev

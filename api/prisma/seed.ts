@@ -4,6 +4,7 @@ import { hash } from 'bcrypt';
 const prisma = new PrismaClient()
 
 async function run() {
+  await prisma.picture.deleteMany();
   await prisma.user.deleteMany();
   
   const firstUserId = '0730ffac-d039-4194-9571-01aa2aa0efbd';
