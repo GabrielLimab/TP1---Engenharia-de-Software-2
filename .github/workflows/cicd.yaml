@@ -42,6 +42,5 @@ jobs:
         npm run dev &
     - name: Run Cypress tests
       run: |
-        cd ..
-        npm install
+        npm ci
         npx cypress run
