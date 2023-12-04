@@ -4,7 +4,7 @@ describe('E2E tests', () => {
   const random = Math.floor(Math.random() * 100000);
 
   beforeEach(() => {
-    cy.visit('http://127.0.0.1:5173/');
+    cy.visit('http://localhost:5173/');
     cy.wait(2000);
     cy.clearAllCookies();
   });
@@ -49,6 +49,6 @@ describe('E2E tests', () => {
     cy.url().should('include', '/home');
     cy.wait(1000);
     cy.get('.list-item').eq(5).click();
-    cy.url().should('eq', 'http://127.0.0.1:5173/'); 
+    cy.url().should('eq', 'http://localhost:5173/'); 
   });
 });
