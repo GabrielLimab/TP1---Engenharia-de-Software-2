@@ -1,6 +1,6 @@
 import { JwtPayload, sign, verify } from 'jsonwebtoken';
 import { compare } from 'bcrypt';
-import { prisma } from "../lib/prisma";
+import { prisma } from "../libs/prisma";
 import { PermissionError } from '../../errors/PermissionError';
 import { statusCodes } from '../../utils/constants/status-codes';
 import { Request, Response, NextFunction } from 'express';

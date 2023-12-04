@@ -1,5 +1,5 @@
-import { prisma } from "../../../lib/prisma"
 import { QueryError } from '../../../../errors/QueryError';
+import prisma from "../../../libs/prisma"
 
 class PictureServiceClass {
     selectOptions = {

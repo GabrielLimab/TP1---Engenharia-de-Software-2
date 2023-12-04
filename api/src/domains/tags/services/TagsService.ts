@@ -1,6 +1,6 @@
-import { prisma } from "../../../lib/prisma"
 import { QueryError } from '../../../../errors/QueryError';
 import { PermissionError } from "../../../../errors/PermissionError";
+import prisma from "../../../libs/prisma"
 
 class TagServiceClass {
     selectOptions = {
