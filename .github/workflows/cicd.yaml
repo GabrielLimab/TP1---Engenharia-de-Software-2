@@ -15,4 +15,5 @@ jobs:
         cache-dependency-path: './api/package-lock.json'
     - run: |
           cd api
+          npm install
           npm test
