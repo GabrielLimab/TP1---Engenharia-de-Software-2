@@ -346,7 +346,6 @@ describe('edit', () => {
     prisma.user.findFirst.mockResolvedValueOnce(null);
 
     await UserService.edit('2', editBody, null);
-    console.log(editBody.password);
     expect(bcrypt.hash).toHaveBeenCalledWith('test', 10);
   });
 
