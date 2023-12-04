@@ -29,9 +29,19 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
+        cache: 'npm'
         cache-dependency-path: './api/package-lock.json'
     - name: Install API dependencies and run API
       run: |
         cd api
         npm ci
-        npm run dev
+        npm run dev &
+    - name: Install client dependencies and run client
+      run: |
+        cd client
+        npm ci
+        npm run dev &
+    - name: Run Cypress tests
+      run: |
+        cd ..
+        npx cypress run
