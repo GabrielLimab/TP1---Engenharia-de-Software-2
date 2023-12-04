@@ -1,7 +1,7 @@
-import { prisma } from "../../../lib/prisma";
-import { User } from "@prisma/client";
+import { Prisma, User } from "@prisma/client";
 import { hash } from 'bcrypt';
 import { QueryError } from '../../../../errors/QueryError';
+import prisma from "../../../libs/prisma";
 
 class UserServiceClass {
   selectOptions = {
@@ -35,7 +35,7 @@ class UserServiceClass {
     return encryptedPassword;
   }
 
-  async create(body: User, file: any) {
+  async create(body: Prisma.UserCreateInput, file: any) {
     const userEmail = await prisma.user.findFirst({
       where: {
         email: body.email,
@@ -81,10 +81,10 @@ class UserServiceClass {
       select: this.selectOptions,
     });
 
-    if (!users) {
+    if (users.length === 0) {
       throw new QueryError('No users found');
     }
-
+    
     return users;
   }
 
@@ -119,7 +119,30 @@ class UserServiceClass {
   }
 
   async edit(id: string, body: Partial<Omit<User, 'id'>>, file: any){
+    const user = await prisma.user.findFirst({
+      where: {
+        id,
+      },
+    });
+
+    if (!user) {
+      throw new QueryError('User not found');
+    }
+
     const userData = body;
+
+    
+    if (body.email) {
+      const userEmail = await prisma.user.findFirst({
+        where: {
+          email: body.email,
+        },
+      });
+      
+      if (userEmail) {
+        throw new QueryError('Email already in use');
+      }
+    }
 
     if (body.username) {
       const userUsername = await prisma.user.findFirst({
@@ -130,18 +153,6 @@ class UserServiceClass {
 
       if (userUsername) {
         throw new QueryError('Username already in use');
-      }
-    }
-
-    if (body.email) {
-      const userEmail = await prisma.user.findFirst({
-        where: {
-          email: body.email,
-        },
-      });
-
-      if (userEmail) {
-        throw new QueryError('Email already in use');
       }
     }
     
@@ -178,6 +189,16 @@ class UserServiceClass {
   }
 
   async toggleFollow(followingId: string, followedId: string) {
+    const following = await prisma.user.findFirst({
+      where: {
+        id: followingId,
+      },
+    });
+    
+    if (!following) {
+      throw new QueryError('User not found');
+    }
+    
     const followed = await prisma.user.findFirst({
       where: {
         id: followedId,
@@ -185,16 +206,6 @@ class UserServiceClass {
     });
 
     if (!followed) {
-      throw new QueryError('User not found');
-    }
-
-    const following = await prisma.user.findFirst({
-      where: {
-        id: followingId,
-      },
-    });
-
-    if (!following) {
       throw new QueryError('User not found');
     }
 
