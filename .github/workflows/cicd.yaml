@@ -43,4 +43,5 @@ jobs:
     - name: Run Cypress tests
       run: |
         cd ..
+        npm ci
         npx cypress run
