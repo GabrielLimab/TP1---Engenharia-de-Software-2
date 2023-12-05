@@ -14,8 +14,9 @@ O objetivo do sistema é criar uma rede de compartilhamento de imagens.
 # Tecnologias
 - NodeJs
 - TypeScript
-- ReactJs
 - SQLite
 - Prisma (ORM)
 - Vitest 
+- ReactJs
+- Vite
 - Cypress
