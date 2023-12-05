@@ -17,3 +17,5 @@ O objetivo do sistema é criar uma rede de compartilhamento de imagens.
 - ReactJs
 - SQLite
 - Prisma (ORM)
+- Vitest 
+- Cypress
